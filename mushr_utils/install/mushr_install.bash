@@ -37,7 +37,14 @@ fi
 
 # curl and dep keys
 if [[ $MUSHR_OS_TYPE == "Linux" ]]; then
-  sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+
+  # Install ROS1 or ROS2 Depending on ubuntu version
+  VERSION_NUM=$(lsb_release -sr | cut -f1 -d ".")
+  if [[ $VERSION_NUM -gt 20 ]]; then
+	  sudo sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+  else
+	  sudo sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+  fi
   sudo apt-get update
   sudo apt-get install -y curl
   curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
@@ -109,10 +116,10 @@ export MUSHR_COMPOSE_FILE=${MUSHR_COMPOSE_FILE}
 export MUSHR_OS_TYPE=${MUSHR_OS_TYPE}
 if [ \$# == 0 ] || [ \$1 == "run" ];
 then
-  docker-compose -f \$MUSHR_INSTALL_PATH/\$MUSHR_COMPOSE_FILE run -p 	9090:9090 mushr_noetic bash
+  docker compose -f \$MUSHR_INSTALL_PATH/\$MUSHR_COMPOSE_FILE run -p 	9090:9090 mushr_noetic bash
 elif [ \$1 == "build" ];
 then
-  docker-compose -f $MUSHR_INSTALL_PATH/$MUSHR_COMPOSE_FILE build --no-cache mushr_noetic
+  docker compose -f $MUSHR_INSTALL_PATH/$MUSHR_COMPOSE_FILE build --no-cache mushr_noetic
 else
   echo "Invalid command supplied to mushr_noetic script; valid commands are 'run' or 'build'"
 fi
