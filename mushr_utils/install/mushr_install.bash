@@ -41,7 +41,7 @@ if [[ $MUSHR_OS_TYPE == "Linux" ]]; then
   # Install ROS1 or ROS2 Depending on ubuntu version
   VERSION_NUM=$(lsb_release -sr | cut -f1 -d ".")
   if [[ $VERSION_NUM -gt 20 ]]; then
-	  sudo sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+	  sudo sh -c 'echo "deb [arch=$(dpkg --print-architecture)] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list'
   else
 	  sudo sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
   fi
